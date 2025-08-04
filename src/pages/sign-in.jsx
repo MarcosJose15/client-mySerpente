@@ -14,59 +14,47 @@ export function SignIn() {
   const navigate = useNavigate();
 
   return (
-    <section>
-      <div className="w-full lg:w-3/5 mt-24"></div>
-      <div className="text-center">
-        <a href="https://vite.dev" target="_blank">
-           <img src={logo} className="flex justify-center mx-auto w-50" alt="Vite logo" />
+    <div className="min-h-screen flex flex-col justify-center items-center bg-white">
+      <section className="w-full flex flex-col items-center">
+        <a href="/sign-up" target="_blank">
+          <img src={logo} className="mx-auto w-50" alt="logo" />
         </a>
-        <Typography variant="h2" className="font-bold mb-4">
-          Sign In
-        </Typography>
-        <Typography
-          variant="paragraph"
-          color="blue-gray"
-          className="text-lg font-normal"
-        >
+        <h2 className="font-bold mb-4 text-2xl text-center">Sign In</h2>
+        <p className="text-lg font-normal text-blue-gray-700 text-center">
           Enter your email and password to Sign In.
-        </Typography>
-      </div>
-      <form className="mt-8 mb-2 mx-auto w-80 max-w-screen-lg lg:w-1/2">
-        <div className="mb-1 flex flex-col gap-6">
-          <Typography
-            variant="small"
-            color="blue-gray"
-            className="-mb-3 font-medium"
-          >
-            Your email
-          </Typography>
-          <Input
-            size="lg"
-            placeholder="name@mail.com"
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-            labelProps={{
-              className: "before:content-none after:content-none",
-            }}
-          />
-          <Typography
-            variant="small"
-            color="blue-gray"
-            className="-mb-3 font-medium"
-          >
-            Password
-          </Typography>
-          <Input
-            type="password"
-            size="lg"
-            placeholder="********"
-            className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
-            labelProps={{
-              className: "before:content-none after:content-none",
-            }}
-          />
-        </div>
-        <Checkbox
-          label={
+        </p>
+        <form className="mt-8 mb-2 flex flex-col items-center w-80">
+          <div className="mb-1 flex flex-col gap-6 w-full">
+            <label
+              htmlFor="email"
+              className="-mb-3 font-medium text-blue-gray-700"
+            >
+              Your email
+            </label>
+            <input
+              id="email"
+              type="email"
+              placeholder="name@mail.com"
+              className="border border-blue-gray-200 focus:border-gray-900 rounded px-3 py-2"
+              name="email"
+            />
+            <label
+              htmlFor="password"
+              className="-mb-3 font-medium text-blue-gray-700 mt-4"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              placeholder="********"
+              className="border border-blue-gray-200 focus:border-gray-900 rounded px-3 py-2"
+              name="password"
+            />
+          </div>
+          <br />
+          <div className="flex items-center gap-2 w-full mb-2">
+            <Checkbox label={false} containerProps={{ className: "p-0 m-0" }} />
             <span className="flex items-center gap-2">
               I agree
               <a
@@ -77,22 +65,40 @@ export function SignIn() {
                 Terms and Conditions
               </a>
             </span>
-          }
-          containerProps={{ className: "flex items-center -ml-2.5" }}
-        />
-
-        <Button className="mt-10 bg-black w-50 mx-auto" fullWidth>
-          Sign In
-        </Button>
-
-        <Button
-          className="mt-2 bg-black w-50 mx-auto block"
-          onClick={() => navigate("/alguma-rota")}
+          </div>
+          <br />
+          <div className="flex flex-col gap-4 items-center mt-6 w-full">
+            <button
+              type="button"
+              onClick={() => navigate("/sign-in")}
+              className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200"
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate("/sign-up")}
+              className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200"
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </section>
+      <br />
+      <br />
+      <footer className="w-80 mt-6 flex justify-center">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200"
         >
-          Botão Sign In
-        </Button>
-      </form>
-    </section>
+          Back
+        </button>
+      </footer>
+      
+      <br />
+    </div>
   );
 }
 
