@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import logo from "/src/assets/logo.png";
 
+import React from "react";
 import {
   Card,
   Input,
@@ -12,6 +13,39 @@ import {
 
 export function SignIn() {
   const navigate = useNavigate();
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+
+  // URL da sua API .NET
+  const API_URL = "https://sua-api-dotnet.com/api/auth/login";
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+      const data = await response.json();
+      // Exemplo: salvar token e navegar
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      setError("Usuário ou senha inválidos");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-white">
@@ -23,7 +57,10 @@ export function SignIn() {
         <p className="text-lg font-normal text-blue-gray-700 text-center">
           Enter your email and password to Sign In.
         </p>
-        <form className="mt-8 mb-2 flex flex-col items-center w-80">
+        <form
+          className="mt-8 mb-2 flex flex-col items-center w-80"
+          onSubmit={handleLogin}
+        >
           <div className="mb-1 flex flex-col gap-6 w-full">
             <label
               htmlFor="email"
@@ -37,6 +74,9 @@ export function SignIn() {
               placeholder="name@mail.com"
               className="border border-blue-gray-200 focus:border-gray-900 rounded px-3 py-2"
               name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <label
               htmlFor="password"
@@ -50,6 +90,9 @@ export function SignIn() {
               placeholder="********"
               className="border border-blue-gray-200 focus:border-gray-900 rounded px-3 py-2"
               name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <br />
@@ -67,13 +110,16 @@ export function SignIn() {
             </span>
           </div>
           <br />
+          {error && (
+            <div className="text-red-600 text-center mb-2">{error}</div>
+          )}
           <div className="flex flex-col gap-4 items-center mt-6 w-full">
             <button
-              type="button"
-              onClick={() => navigate("/sign-in")}
+              type="submit"
+              disabled={loading}
               className="w-80 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200"
             >
-              Login
+              {loading ? "Entrando..." : "Login"}
             </button>
             <button
               type="button"
@@ -96,7 +142,7 @@ export function SignIn() {
           Back
         </button>
       </footer>
-      
+
       <br />
     </div>
   );

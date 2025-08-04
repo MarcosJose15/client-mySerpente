@@ -30,6 +30,20 @@ function App() {
       >
         Sign Up
       </button>
+      <button
+        type="button"
+        onClick={() => navigate("/home-map")}
+        className="w-40 mx-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200 mt-6"
+      >
+        Home Map
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate("/species-list")}
+        className="w-40 mx-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-md shadow-md transition-colors duration-200 mt-6"
+      >
+        Species List
+      </button>
     </div>
   );
 }
