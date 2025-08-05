@@ -7,17 +7,20 @@ import SignIn from "./pages/sign-in.jsx";
 import SignUp from "./pages/sign-up.jsx";
 import HomeMap from "./pages/HomeMap.jsx";
 import SpeciesList from "./pages/SpeciesList.jsx";
+import { AuthProvider } from "./components/auth/AuthContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/home-map" element={<HomeMap />} />
-        <Route path="/species-list" element={<SpeciesList />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/home-map" element={<HomeMap />} />
+          <Route path="/species-list" element={<SpeciesList />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 );

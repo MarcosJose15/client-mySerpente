@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste de Login - mySerpente</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+      .register-btn {
+        background-color: #2196f3;
+      }
+      .register-btn:hover {
+        background-color: #1976d2;
+      }
+      .result {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+      }
+      .success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🐍 Teste de Autenticação - mySerpente</h1>
+
+      <h2>Cadastro de Usuário</h2>
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="regNome">Nome:</label>
+          <input type="text" id="regNome" required />
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email:</label>
+          <input type="email" id="regEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="regSenha">Senha:</label>
+          <input type="password" id="regSenha" required />
+        </div>
+        <div class="form-group">
+          <label for="regTelefone">Telefone:</label>
+          <input type="tel" id="regTelefone" required />
+        </div>
+        <button type="submit" class="register-btn">Cadastrar</button>
+      </form>
+
+      <hr style="margin: 30px 0" />
+
+      <h2>Login</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">Email:</label>
+          <input type="email" id="loginEmail" required />
+        </div>
+        <div class="form-group">
+          <label for="loginSenha">Senha:</label>
+          <input type="password" id="loginSenha" required />
+        </div>
+        <button type="submit">Fazer Login</button>
+      </form>
+
+      <div id="result" class="result"></div>
+
+      <hr style="margin: 30px 0" />
+
+      <h3>📋 Instruções para Teste:</h3>
+      <div class="info" style="display: block">
+        <p>
+          <strong>1. Primeira vez:</strong> Use o formulário de cadastro para
+          criar um usuário
+        </p>
+        <p>
+          <strong>2. Login:</strong> Use as credenciais criadas para fazer login
+        </p>
+        <p>
+          <strong>3. API:</strong> Certifique-se que a API está rodando em
+          http://localhost:5133
+        </p>
+        <p>
+          <strong>4. Banco:</strong> O banco SQL Server deve estar configurado e
+          conectado
+        </p>
+      </div>
+    </div>
+
+    <script>
+      const API_BASE_URL = "http://localhost:5133/api";
+
+      // Função para mostrar resultado
+      function showResult(message, type) {
+        const resultDiv = document.getElementById("result");
+        resultDiv.className = `result ${type}`;
+        resultDiv.innerHTML = message;
+        resultDiv.style.display = "block";
+      }
+
+      // Cadastro
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const userData = {
+            nome: document.getElementById("regNome").value,
+            email: document.getElementById("regEmail").value,
+            senha: document.getElementById("regSenha").value,
+            telefone: document.getElementById("regTelefone").value,
+          };
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/auth/register`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(userData),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              showResult(
+                `✅ Cadastro realizado com sucesso!<br>
+                               <strong>Token:</strong> ${result.token.substring(
+                                 0,
+                                 50
+                               )}...<br>
+                               <strong>Nome:</strong> ${result.nome}<br>
+                               <strong>Email:</strong> ${result.email}`,
+                "success"
+              );
+
+              // Preencher campos de login automaticamente
+              document.getElementById("loginEmail").value = userData.email;
+              document.getElementById("loginSenha").value = userData.senha;
+            } else {
+              const error = await response.text();
+              showResult(`❌ Erro no cadastro: ${error}`, "error");
+            }
+          } catch (error) {
+            showResult(
+              `❌ Erro de conexão: ${error.message}<br>
+                           Verifique se a API está rodando em http://localhost:5133`,
+              "error"
+            );
+          }
+        });
+
+      // Login
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const loginData = {
+            email: document.getElementById("loginEmail").value,
+            password: document.getElementById("loginSenha").value,
+          };
+
+          try {
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(loginData),
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              showResult(
+                `✅ Login realizado com sucesso!<br>
+                               <strong>Token:</strong> ${result.token.substring(
+                                 0,
+                                 50
+                               )}...<br>
+                               <strong>Nome:</strong> ${result.nome}<br>
+                               <strong>Email:</strong> ${result.email}<br>
+                               <strong>Token expira em:</strong> ${new Date(
+                                 result.expiration
+                               ).toLocaleString()}`,
+                "success"
+              );
+
+              // Salvar token no localStorage
+              localStorage.setItem("authToken", result.token);
+            } else {
+              const error = await response.text();
+              showResult(`❌ Erro no login: ${error}`, "error");
+            }
+          } catch (error) {
+            showResult(
+              `❌ Erro de conexão: ${error.message}<br>
+                           Verifique se a API está rodando em http://localhost:5133`,
+              "error"
+            );
+          }
+        });
+
+      // Verificar se API está funcionando ao carregar a página
+      window.addEventListener("load", async () => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/swagger/index.html`);
+          if (response.ok) {
+            showResult(
+              `✅ API está rodando em http://localhost:5133<br>
+                               ✅ Swagger disponível em: http://localhost:5133/swagger`,
+              "info"
+            );
+          }
+        } catch (error) {
+          showResult(
+            `⚠️ API não está respondendo em http://localhost:5133<br>
+                           Inicie a API antes de testar`,
+            "error"
+          );
+        }
+      });
+    </script>
+  </body>
+</html>
